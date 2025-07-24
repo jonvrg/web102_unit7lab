@@ -1,11 +1,24 @@
 import {useState} from 'react'
 import { useParams } from 'react-router-dom'
 import './EditPost.css'
+import { supabase } from '../client'
 
 const EditPost = ({data}) => {
 
     const {id} = useParams()
     const [post, setPost] = useState({id: null, title: "", author: "", description: ""})
+
+    const updatePost = async (event) => {
+        event.preventDefault();
+
+        await supabase
+            .from('Posts')
+            .update({ title: post.title, author: post.author,  description: post.description})
+            .eq('id', id);
+
+        window.location = "/";
+
+    }
 
     const handleChange = (event) => {
         const {name, value} = event.target
@@ -19,7 +32,7 @@ const EditPost = ({data}) => {
 
     return (
         <div>
-            <form>
+            <form onSubmit={updatePost}>
                 <label htmlFor="title">Title</label> <br />
                 <input type="text" id="title" name="title" value={post.title} onChange={handleChange} /><br />
                 <br/>

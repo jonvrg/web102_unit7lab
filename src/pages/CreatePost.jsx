@@ -6,6 +6,16 @@ const CreatePost = () => {
 
     const [post, setPost] = useState({title: "", author: "", description: ""})
 
+    const createPost = async (event) => {
+        event.preventDefault();
+        await supabase
+            .from('Posts')
+            .insert({title: post.title, author: post.author, description: post.description})
+            .select();
+        window.location = "/";
+    }
+
+
     const handleChange = (event) => {
         const {name, value} = event.target
         setPost( (prev) => {
@@ -18,7 +28,7 @@ const CreatePost = () => {
 
     return (
         <div>
-            <form>
+            <form onSubmit={createPost}>
                 <label htmlFor="title">Title</label> <br />
                 <input type="text" id="title" name="title" onChange={handleChange} /><br />
                 <br/>
